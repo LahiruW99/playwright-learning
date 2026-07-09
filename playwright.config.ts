@@ -29,6 +29,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'http://practicesoftwaretesting.com',
+    testIdAttribute: "data-test",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
@@ -51,7 +52,7 @@ export default defineConfig({
       dependencies: ["setup"],
       use: { ...devices['Desktop Chrome'], permissions: ['clipboard-read'] },
     }
-    
+
     // {
     //   name: 'firefox',
     //   dependencies: ["setup"],
