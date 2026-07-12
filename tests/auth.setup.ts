@@ -1,5 +1,5 @@
 import { test as setup,expect } from "@playwright/test";
-import {LoginPage} from "../lib/pages/login.page";
+import { LoginPage } from "../lib/pages/login.page";
 
 setup("Create customer 02 auth", async ({ page, context }) =>{
     const email = "customer2@practicesoftwaretesting.com";
