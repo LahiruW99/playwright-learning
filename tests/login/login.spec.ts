@@ -1,11 +1,28 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from "../../lib/pages/login.page";
+import { registerUser } from "../../lib/datafactory/register";
 
-test('login test - codegen', async ({ page }) => {
-  await page.goto('https://practicesoftwaretesting.com/');
-  await page.locator('[data-test="nav-sign-in"]').click();
-  await page.locator('[data-test="email"]').fill('customer2@practicesoftwaretesting.com');
-  await page.locator('[data-test="password"]').fill('welcome01');
-  await page.locator('[data-test="login-submit"]').click();
+test('login with page object', async ({ page }) => {
+  const email = 'customer2@practicesoftwaretesting.com';
+  const password = 'welcome01';
+
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login(email, password);
+
   await expect(page.locator('[data-test="nav-menu"]')).toContainText('Jack Howe');
+  await expect(page.locator('[data-test="page-title"]')).toContainText('My account');
+});
+
+test("login with newly registered user", async ({ page }) => {
+  const email = `testemaillk${Date.now()}@example.com`;
+  const password = 'Test@Lahiru@12';
+
+  await registerUser(email, password)
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login(email, password);
+
+  await expect(page.locator('[data-test="nav-menu"]')).toContainText('Test User');
   await expect(page.locator('[data-test="page-title"]')).toContainText('My account');
 });
