@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from "../../lib/pages/login.page";
-import { registerUser } from "../../lib/datafactory/register";
+import { LoginPage } from "@pages/login.page";
+import { registerUser } from "@datafactory/register";
 
 test('login with page object', async ({ page }) => {
   const email = 'customer2@practicesoftwaretesting.com';

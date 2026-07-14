@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { randomState } from "../../lib/helpers/states"
+import { randomState } from "@helpers/states";
 
 test('buy now pay later', async ({ page }) => {
   await page.goto('https://practicesoftwaretesting.com/');
