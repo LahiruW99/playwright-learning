@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from "@pages/login.page";
+import { LoginPage } from "@pages/login/login.page";
 import { registerUser } from "@datafactory/register";
 
 test('login with page object', async ({ page }) => {
