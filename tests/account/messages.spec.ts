@@ -1,11 +1,15 @@
 import { registerUser } from "@datafactory/register";
-import { LoginPage } from "@pages/login/login.page";
-import { test, expect } from "@playwright/test";
-import { ContactPage } from "@pages/contact/contact.page"
 import { createMessage } from "@datafactory/message";
-import { MessagesPage } from "@pages/account/messages.page"
+import { test, expect } from "@fixtures/pages.fixture";
 
-test("customer reply to a message", async ({ context, page }) => {
+test("customer reply to a message", async ({ 
+    context, 
+    page, 
+    loginPage,
+    accountPage,
+    contactPage,
+    messagePage ,
+    }) => {
     const timestamp = Date.now(); //get current epoch time in milliseconds
     const email = `new_user_${timestamp}@test.com`;
     const password = "Toiyhsw@34!";
@@ -14,19 +18,17 @@ test("customer reply to a message", async ({ context, page }) => {
     const messageUserAuthFile = ".auth/messageUser.json";
 
     await test.step("create a new user", async () =>{
-        const loginpage = new LoginPage(page);
-        await loginpage.goto();
+        await loginPage.goto();
         await registerUser(email, password);
-        await loginpage.login(email, password);
+        await loginPage.login(email, password);
 
-        await expect(page.locator('[data-test="nav-menu"]')).toContainText("Test User");
+        await expect(accountPage.navMenu).toContainText("Test User");
 
         await context.storageState({ path: messageUserAuthFile}); // save the token and cookies
     });
 
     //non-data factory approach
     await test.step.skip("create a new message", async () => {
-        const contactPage = new ContactPage(page);
         await contactPage.goto();
         await contactPage.subject.selectOption(dropdownOption);
         await contactPage.message.fill(message);
@@ -47,18 +49,17 @@ test("customer reply to a message", async ({ context, page }) => {
     });
 
     await test.step("reply and validate message", async () => {
-        const messagesPage = new MessagesPage(page)
-        await messagesPage.goto();
-        await expect(messagesPage.table).toContainText(message.substring(0, 25));
-        await expect(messagesPage.table).toContainText(dropdownOption);
+        await  messagePage.goto();
+        await expect(messagePage.table).toContainText(message.substring(0, 25));
+        await expect(messagePage.table).toContainText(dropdownOption);
 
-        await messagesPage.firstDetailLink.click();
-        await expect(messagesPage.messagesList).toContainText(message);
+        await messagePage.firstDetailLink.click();
+        await expect(messagePage.messagesList).toContainText(message);
 
         const replyMessage = "Pizza Time";
-        await messagesPage.replyInput.fill(replyMessage);
-        await messagesPage.replyButton.click();
-        await expect(messagesPage.replyList).toContainText(replyMessage);
+        await messagePage.replyInput.fill(replyMessage);
+        await messagePage.replyButton.click();
+        await expect(messagePage.replyList).toContainText(replyMessage);
   });
 
 });
