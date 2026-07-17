@@ -22,8 +22,11 @@ test.describe("Home page with no auth", () => {
     expect(await productGrid.getByRole("link").count()).toBe(9);
   });
 
-  test("search for the hammer", async ({ page }) => {
+  test("search for the hammer", async ({ page, isMobile }) => {
     const productGrid = page.locator(".col-md-9");
+    if (isMobile === true){
+        await page.getByRole("button", {name: "Filters"}).click();
+    }
     await expect(page.getByTestId("search-query")).toBeVisible();
     await page.getByTestId("search-query").fill("Thor Hammer");
     await page.getByTestId("search-submit").click();

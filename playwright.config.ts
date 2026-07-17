@@ -51,7 +51,7 @@ export default defineConfig({
       name: 'chromium',
       dependencies: ["setup"],
       use: { ...devices['Desktop Chrome'], permissions: ['clipboard-read'] },
-    }
+    },
 
     // {
     //   name: 'firefox',
@@ -70,10 +70,10 @@ export default defineConfig({
     //   name: 'Mobile Chrome',
     //   use: { ...devices['Pixel 5'] },
     // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
+    {
+      name: 'Mobile Safari',
+      use: { ...devices['iPhone 13'] },
+    },
 
     /* Test against branded browsers. */
     // {
