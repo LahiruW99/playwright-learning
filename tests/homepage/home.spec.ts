@@ -69,3 +69,25 @@ test.describe("Home page customer 02 auth", () => {
         }
     });
 });
+
+//mocking HTTP responses 
+test("validate product data is visble from modified API", async ({ page }) =>{
+
+    await test.step("overwrite/ products", async () =>{
+    await page.route("https://api.practicesoftwaretesting.com/products", async (route) => {
+        const response = await route.fetch();
+        const json = await response.json();
+        json.data[0]["name"] = "Mocked Product";
+        json.data[0]["price"] = 100000.01;
+        json.data[0]["in_stock"] = false;
+        
+        await route.fulfill({response, json});
+        });
+    });
+
+    await page.goto("/");
+    const productGrid = page.locator(".col-md-9");
+    await expect(productGrid.getByRole("link").first()).toContainText("Mocked Product");
+    await expect(productGrid.getByRole("link").first()).toContainText("100000.01");
+    await expect(productGrid.getByRole("link").first()).toContainText("Out of stock");
+});
