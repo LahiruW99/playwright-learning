@@ -148,3 +148,55 @@ test("validate product data is loaded from har file", async ({ page }) => {
   await expect(productGrid).toContainText("Happy Path Pliers");
   await expect(productGrid).toContainText("1.99");
 });
+
+test("validate brands by intercepting network data", async ({ page }) => {
+  let brands: any;
+  const apiUrl =  process.env.API_URL;
+  await test.step("intercept /brands", async () =>{
+    await page.route(apiUrl + "/brands", async (route) => {
+      const response = await route.fetch()
+      brands = await response.json();
+      route.continue();
+    });
+  });
+  await page.goto("/");
+
+  const productGrid =page.locator(".col-md-9");
+  await expect(productGrid).toBeVisible();
+  await expect(page.locator(".skeleton").first()).not.toBeVisible();
+
+  const brandFilterSection = page.getByText("SortName (A - Z)Name (Z - A)");
+
+  for (const brand of brands){
+    await expect(brandFilterSection).toContainText(brand.name);
+  }
+});
+
+test("validate categories render in UI by mocking", async ({ page }) => {
+  let categories: any;
+  const apiUrl = process.env.API_URL;
+
+  await test.step("intercept /categories", async () => {
+    await page.route(apiUrl + "/categories/tree", async (route) => {
+      const response = await route.fetch();
+      const json = await response.json();
+      categories = json.data;
+
+      json[0].name = "Mocked Category";
+      if (json[0].sub_categories && json[0].sub_categories.length > 0) {
+        json[0].sub_categories[0].name = "Mocked Subcategory";
+      }
+      await route.fulfill({ response, json });
+    });
+  });
+  await page.goto("/");
+
+  const productGrid = page.locator(".col-md-9");
+  await expect(productGrid).toBeVisible();
+  await expect(page.locator(".skeleton").first()).not.toBeVisible();
+
+  const categoryFilterSection = page.getByText("SortName (A - Z)Name (Z - A)");
+
+  await expect(categoryFilterSection).toContainText("Mocked Category");
+  await expect(categoryFilterSection).toContainText("Mocked Subcategory");
+});
