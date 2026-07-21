@@ -45,6 +45,16 @@ This repository contains my hands-on practice while learning Playwright with Typ
 - Dependency injection using fixtures
 - Shared test setup and teardown
 
+### Mocking & Browser Emulation
+- Network request interception using `page.route()`
+- Mocking HTTP requests and API responses
+- Browser and device emulation
+- Mobile viewport testing
+- Localization testing (language & timezone)
+- Geolocation testing
+- Injecting custom JavaScript into web pages
+- End-to-end testing with mocked backend services
+
 ## 🛠 Technologies Used
 
 - Playwright
