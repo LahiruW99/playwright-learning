@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"
 
 test("GET /products", async ({ request }) => {
-    const apiUrl = "https://api.practicesoftwaretesting.com/";
+    const apiUrl = process.env.API_URL;
     const response = await request.get(apiUrl + "brands");
 
     expect(response.status()).toBe(200);
@@ -10,7 +10,7 @@ test("GET /products", async ({ request }) => {
 });
 
 test("POST /login", async ({ request}) => {
-    const apiUrl = "https://api.practicesoftwaretesting.com/";
+    const apiUrl = process.env.API_URL;
     const response = await request.post(apiUrl + "users/login", {
         data: {
             email: "customer2@practicesoftwaretesting.com",
@@ -23,7 +23,7 @@ test("POST /login", async ({ request}) => {
 });
 
 test("GET /product/{id}", async ({ request }) => {
-    const apiUrl = "https://api.practicesoftwaretesting.com/";
+    const apiUrl = process.env.API_URL;
     const getProductResponse = await request.get(apiUrl + "/products/search?q=thor%20hammer");
     expect(getProductResponse.status()).toBe(200);
     const productBody = await getProductResponse.json();
